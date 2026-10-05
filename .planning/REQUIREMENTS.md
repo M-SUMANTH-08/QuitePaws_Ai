@@ -51,24 +51,24 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| AIP-01 | Pending | Pending |
-| AIP-02 | Pending | Pending |
-| AIP-03 | Pending | Pending |
-| AIP-04 | Pending | Pending |
-| INT-01 | Pending | Pending |
-| INT-02 | Pending | Pending |
-| INT-03 | Pending | Pending |
-| INT-04 | Pending | Pending |
-| SYS-01 | Pending | Pending |
-| SYS-02 | Pending | Pending |
-| SYS-03 | Pending | Pending |
-| SYS-04 | Pending | Pending |
-| SYS-05 | Pending | Pending |
+| AIP-01 | Phase 1 | Pending |
+| AIP-02 | Phase 1 | Pending |
+| AIP-03 | Phase 2 | Pending |
+| AIP-04 | Phase 2 | Pending |
+| INT-01 | Phase 3 | Pending |
+| INT-02 | Phase 3 | Pending |
+| INT-03 | Phase 3 | Pending |
+| INT-04 | Phase 3 | Pending |
+| SYS-01 | Phase 1 | Pending |
+| SYS-02 | Phase 4 | Pending |
+| SYS-03 | Phase 4 | Pending |
+| SYS-04 | Phase 1 | Pending |
+| SYS-05 | Phase 5 | Pending |
 
 **Coverage:**
 - v1 requirements: 13 total
-- Mapped to phases: 0
-- Unmapped: 13 ⚠️
+- Mapped to phases: 13
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-10-05*
