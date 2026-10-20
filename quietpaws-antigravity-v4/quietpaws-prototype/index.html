@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0A0A0F">
+  <meta name="description" content="QuietPaws is an offline-first, meeting-aware pet interruption prevention prototype. Browser perception and fusion run locally on the device.">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="QuietPaws — Your phone stays to protect your meeting.">
+  <meta property="og:description" content="SEE → HEAR → THINK → ACT → VERIFY → INFORM. A phone-native, meeting-aware pet interruption prevention prototype.">
+  <meta property="og:image" content="/assets/quietpaws-social.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="QuietPaws — Your phone stays to protect your meeting.">
+  <meta name="twitter:description" content="Offline-first, meeting-aware pet interruption prevention.">
+  <meta name="twitter:image" content="/assets/quietpaws-social.png">
+  <link rel="canonical" href="https://quietpaws.vercel.app/">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="preload" href="css/main.css" as="style">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="/site-config.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.20.0/dist/tf.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3/dist/coco-ssd.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<header class="nav">
+  <a class="nav-brand" href="/" aria-label="QuietPaws home"><span class="nav-dot"></span><span>QuietPaws</span></a>
+  <nav class="nav-links" aria-label="Legal and project links">
+    <a href="#demo">Demo</a><a href="#architecture">How it works</a><a href="/privacy.html">Privacy</a>
+  </nav>
+  <div class="nav-status" id="navStatus"><span class="nav-pulse"></span><span id="navStatusText">OFFLINE</span></div>
+</header>
+
+<main class="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-badge"><span class="hero-badge-dot"></span>Live browser prototype · local browser inference</div>
+    <h1 id="hero-title">Your phone sees.<br><span class="hero-gradient">Your meeting stays uninterrupted.</span></h1>
+    <p>QuietPaws detects a potential pet interruption near your workspace, combines local camera + audio evidence, acts with the owner's voice, verifies the response, and informs you silently.</p>
+    <div class="hero-meta"><span>Target: <strong>iQOO 15</strong></span><span>Development device: <strong>POCO X6 Pro</strong></span><span>No cloud inference</span></div>
+    <div class="hero-actions"><a class="btn btn-primary hero-cta" href="#demo">Open the live demo</a><a class="text-link" href="#architecture">See the architecture →</a></div>
+  </section>
+
+  <section id="demo" class="demo-section" aria-labelledby="demo-title">
+    <div class="section-heading"><div><span class="eyebrow">INTERACTIVE PROOF</span><h2 id="demo-title">See the phone handle the interruption.</h2></div><p>Use live camera + microphone or the deterministic controlled scenarios. Controlled scenarios are explicitly labeled as simulated.</p></div>
+
+    <div class="layout">
+      <section class="camera-panel" aria-label="QuietPaws live detection panel">
+        <div class="camera-header">
+          <div class="status-row"><div class="status-item"><span class="status-dot" id="dotCamera"></span><span>CAMERA</span></div><div class="status-item"><span class="status-dot" id="dotMic"></span><span>MIC</span></div><div class="status-item"><span class="status-dot" id="dotModel"></span><span>MODEL</span></div></div>
+          <div class="fps-counter" id="fpsCounter">—</div>
+        </div>
+        <div class="video-wrap">
+          <video id="camera" autoplay muted playsinline aria-label="Live camera preview"></video>
+          <canvas id="overlay" aria-hidden="true"></canvas>
+          <div class="flash-overlay" id="flashOverlay"></div>
+          <div class="workspace-box" id="workspaceBox"><span>WORKSPACE</span></div>
+          <div class="meeting-badge" id="meetingBadge">MEETING MODE ON</div>
+          <div class="state-pill no-dog" id="statePill">NO DOG</div>
+          <div class="idle-screen" id="idleScreen"><div class="idle-icon">📷</div><div class="idle-title">Camera + mic ready</div><div class="idle-sub">Start live detection, or use a controlled scenario.</div></div>
+        </div>
+        <div class="telemetry">
+          <div class="tel-item"><div class="tel-label">Vision</div><div class="tel-value" id="visionValue">—</div></div>
+          <div class="tel-item"><div class="tel-label">Audio</div><div class="tel-value" id="audioValue">—</div></div>
+          <div class="tel-item"><div class="tel-label">Level</div><div class="tel-value" id="levelValue">—</div></div>
+          <div class="tel-item"><div class="tel-label">Approach</div><div class="tel-value" id="approachValue">—</div></div>
+          <div class="tel-item"><div class="tel-label">Response</div><div class="tel-value" id="responseValue">WAITING</div></div>
+          <div class="waveform" id="waveform" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <aside class="controls" aria-label="Demo controls">
+        <div class="card">
+          <div class="card-title">Meeting protection</div>
+          <button class="btn btn-primary" id="btnMeeting" type="button">MEETING MODE · ON</button>
+          <button class="btn btn-primary" id="btnStart" type="button"><span class="btn-icon">🎥</span><span>Start Live Detection</span></button>
+          <button class="btn btn-danger" id="btnStop" type="button" hidden><span class="btn-icon">⏹</span><span>Stop</span></button>
+        </div>
+        <div class="card">
+          <div class="card-title">Controlled demo</div>
+          <p class="card-note">These scenarios inject controlled events into the same product loop. They are not live animal measurements.</p>
+          <button class="btn" data-sim="success" type="button"><span class="btn-icon">🐕</span><span class="btn-label">Scenario A · Single success<span class="btn-sub">Approach → owner voice → verified movement</span></span></button>
+          <button class="btn" data-sim="retry" type="button"><span class="btn-icon">🔁</span><span class="btn-label">Scenario B · Adaptive retry<span class="btn-sub">Cue 1 fails → alternate cue → verified response</span></span></button>
+          <button class="btn" data-sim="calm" type="button"><span class="btn-icon">🛡️</span><span class="btn-label">Scenario C · No intervention<span class="btn-sub">No qualifying meeting interruption</span></span></button>
+        </div>
+        <div class="card">
+          <div class="card-title">Session log</div>
+          <div class="log-list" id="logList"><div class="log-empty">No interventions yet.</div></div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="architecture" class="architecture-section" aria-labelledby="arch-title">
+    <div class="section-heading"><div><span class="eyebrow">SYSTEM DESIGN</span><h2 id="arch-title">SEE → HEAR → THINK → ACT → VERIFY → INFORM</h2></div><p>The browser prototype demonstrates the product loop. The native target is iQOO 15.</p></div>
+    <div class="pipeline"><div><b>SEE</b><span>COCO-SSD dog detection</span></div><i>→</i><div><b>HEAR</b><span>Spectral audio analysis</span></div><i>→</i><div><b>THINK</b><span>Temporal + workspace fusion</span></div><i>→</i><div><b>ACT</b><span>Owner voice cue</span></div><i>→</i><div><b>VERIFY</b><span>2.6 s response observation</span></div><i>→</i><div><b>INFORM</b><span>Haptic + local session log</span></div></div>
+    <div class="feature-grid">
+      <article class="feature"><div class="feature-icon">👁️</div><h3>Vision</h3><p>COCO-SSD runs locally in the browser and supplies dog bounding boxes and confidence.</p></article>
+      <article class="feature"><div class="feature-icon">🎤</div><h3>Audio</h3><p>Browser audio uses spectral heuristics. The native Android target uses YAMNet; the two are intentionally distinguished.</p></article>
+      <article class="feature"><div class="feature-icon">📍</div><h3>Workspace-aware</h3><p>Dog presence alone is not the product event. Workspace proximity and approach are part of the intervention decision.</p></article>
+      <article class="feature"><div class="feature-icon">🔊</div><h3>Owner voice proxy</h3><p>The phone plays a predefined owner cue first, then waits for observable response.</p></article>
+      <article class="feature"><div class="feature-icon">🔁</div><h3>Closed loop</h3><p>If the first cue is not verified, one alternate cue is attempted before stopping.</p></article>
+      <article class="feature"><div class="feature-icon">🔒</div><h3>Offline-first</h3><p>Inference and session state are local. Network is not used for the browser inference loop.</p></article>
+    </div>
+  </section>
+
+  <section class="target-section">
+    <div class="target-card"><div><span class="eyebrow">HARDWARE POSITIONING</span><h2>Designed for iQOO 15. Proven incrementally on available hardware.</h2><p>The current browser prototype is developed and tested on the POCO X6 Pro. iQOO 15-specific performance and hardware claims are intentionally left unmeasured until the target device is available.</p></div><div class="target-stack"><span>DEVELOPMENT · POCO X6 PRO</span><span>TARGET · iQOO 15</span><span>VALIDATE · BEFORE CLAIMING</span></div></div>
+  </section>
+
+  <section class="trust-section"><div class="trust-item"><b>Privacy</b><span>Camera/mic are used only after permission.</span></div><div class="trust-item"><b>Transparency</b><span>Controlled scenarios are labeled simulated.</span></div><div class="trust-item"><b>Safety</b><span>No diagnosis or guaranteed animal response.</span></div></section>
+</main>
+
+<footer class="footer"><div>QuietPaws · iQOO × Reskill Grand Finale 2026</div><div class="footer-links"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="/404.html">404</a></div><div class="footer-sub">Browser demo · target hardware: iQOO 15 · development device: POCO X6 Pro</div></footer>
+
+<div class="cookie-banner" id="cookieBanner" role="dialog" aria-live="polite" aria-label="Analytics consent"><div><strong>Privacy choices</strong><p>QuietPaws keeps camera/microphone inference local. Optional website analytics can be enabled to measure visits. Vercel Web Analytics is designed to use anonymized data and no cookies.</p></div><div class="cookie-actions"><button class="btn btn-ghost" id="cookieReject" type="button">Keep optional analytics off</button><button class="btn btn-primary" id="cookieAccept" type="button">Allow analytics</button></div></div>
+
+<script type="module" src="js/main.js"></script>
+<script defer src="/js/consent.js"></script>
+</body></html>

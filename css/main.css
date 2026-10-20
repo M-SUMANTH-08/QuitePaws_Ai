@@ -1,0 +1,198 @@
+/* QuietPaws — Jury Impact UI */
+
+:root {
+  --bg: #050505;
+  --surface: #0A0A0A;
+  --surface-2: #111111;
+  --border: #222222;
+  --text: #F5F5F5;
+  --muted: #888888;
+  --yellow: #FFD600;
+  --white: #FFFFFF;
+  --black: #000000;
+  --radius: 0px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, sans-serif;
+  line-height: 1.5;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  display: flex; flex-direction: column; min-height: 100vh;
+}
+button { font: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+button:focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; }
+
+/* --- HEADER --- */
+.top-bar {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(5, 5, 5, 0.9); backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 100;
+}
+.brand-col { display: flex; flex-direction: column; }
+.brand { font-size: 16px; font-weight: 800; letter-spacing: 0.1em; color: var(--white); }
+.brand-sub { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 0.05em; margin-top: 2px; }
+.status-col { display: flex; flex-direction: column; align-items: flex-end; }
+.hw-title { font-size: 12px; font-weight: 800; color: var(--white); }
+.status-row { display: flex; align-items: center; gap: 4px; font-size: 10px; font-weight: 700; color: var(--yellow); margin-top: 2px; }
+.status-dot-pulse { animation: pulse 1.5s infinite; }
+.local-text { font-size: 9px; font-family: monospace; color: var(--muted); margin-top: 2px; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+/* --- MAIN LAYOUT --- */
+.app-container { max-width: 600px; margin: 0 auto; padding: 24px 20px 80px; width: 100%; flex: 1; }
+
+.hero-header { margin-bottom: 24px; }
+.hero-header h1 {
+  font-size: clamp(26px, 7vw, 36px);
+  font-weight: 800; line-height: 1.05; letter-spacing: -0.03em; text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.hero-header p { color: var(--muted); font-size: 13px; max-width: 90%; margin-bottom: 12px; }
+.agent-moment {
+  display: inline-block;
+  font-size: 10px; font-family: monospace; font-weight: 700; color: var(--yellow);
+  padding: 4px 8px; border: 1px solid var(--yellow);
+}
+
+/* --- CAMERA SECTION --- */
+.camera-section {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  margin-bottom: 20px;
+  position: relative;
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+.camera-section.alert-state {
+  border-color: var(--yellow);
+  box-shadow: 0 0 20px rgba(255, 214, 0, 0.15);
+}
+
+.camera-header {
+  display: flex; justify-content: space-between; padding: 10px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 10px; font-family: monospace; color: var(--muted);
+}
+.hardware-status { display: flex; gap: 12px; }
+.hw-dot { display: inline-block; width: 6px; height: 6px; background: var(--border); margin-right: 4px; }
+.hw-dot.on { background: var(--yellow); box-shadow: 0 0 8px rgba(255, 214, 0, 0.6); }
+.hw-dot.err { background: var(--white); box-shadow: 0 0 8px rgba(255, 255, 255, 0.6); }
+
+.video-wrap { position: relative; aspect-ratio: 3/4; background: var(--black); overflow: hidden; }
+#camera, #overlay { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#overlay { z-index: 2; pointer-events: none; }
+
+.workspace-box {
+  position: absolute; z-index: 3;
+  border: 1px dashed rgba(255, 214, 0, 0.4); background: rgba(255, 214, 0, 0.05);
+  pointer-events: none;
+}
+.workspace-box span {
+  position: absolute; top: -1px; left: -1px;
+  background: rgba(255, 214, 0, 0.2); color: var(--yellow);
+  font-family: monospace; font-size: 9px; padding: 2px 6px;
+}
+
+.idle-screen {
+  position: absolute; inset: 0; z-index: 20;
+  background: var(--surface);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  padding: 24px; text-align: center;
+}
+.idle-title { font-size: 14px; font-weight: 800; color: var(--white); margin-bottom: 24px; letter-spacing: 0.1em; }
+.idle-reqs { font-size: 10px; font-family: monospace; color: var(--muted); margin-bottom: 24px; letter-spacing: 0.05em; }
+.req-val { font-weight: 700; color: var(--text); }
+.start-error { margin-top: 16px; font-size: 10px; font-family: monospace; color: var(--yellow); font-weight: 700; white-space: pre-wrap; line-height: 1.4; }
+
+.waveform-container {
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.waveform-label { font-size: 9px; font-family: monospace; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+.waveform { display: flex; align-items: flex-end; gap: 2px; height: 16px; flex: 1; }
+.waveform-bar { flex: 1; height: 2px; background: var(--border); transition: height 0.05s; }
+.waveform.active .waveform-bar { background: var(--yellow); }
+
+/* --- DASHBOARD GRID --- */
+.dashboard-grid {
+  display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 24px;
+}
+.dash-card {
+  border: 1px solid var(--border); background: var(--surface);
+  padding: 16px; position: relative;
+  transition: all 0.3s;
+}
+.dash-card.active {
+  border-color: var(--yellow);
+  background: rgba(255, 214, 0, 0.05);
+}
+.dash-label { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 6px; }
+.dash-value { font-size: 16px; font-weight: 800; color: var(--white); text-transform: uppercase; }
+.dash-card.active .dash-value { color: var(--yellow); }
+
+.btn-toggle {
+  position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; z-index: 5;
+}
+
+/* --- CONTROLS --- */
+.controls-section { display: flex; flex-direction: column; gap: 16px; }
+
+.btn-primary {
+  background: var(--white); color: var(--black);
+  padding: 14px 24px; font-size: 12px; font-weight: 700; letter-spacing: 0.05em;
+}
+
+.card { border: 1px solid var(--border); background: var(--surface); }
+.card-header {
+  padding: 12px 16px; border-bottom: 1px solid var(--border);
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em; color: var(--muted);
+}
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+
+.voice-layout { display: flex; justify-content: space-between; align-items: center; padding: 16px; }
+.voice-state { font-size: 14px; font-weight: 700; color: var(--white); }
+.voice-state.recorded { color: var(--yellow); }
+.voice-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.voice-actions { display: flex; gap: 8px; }
+
+.btn-action {
+  padding: 8px 16px; background: var(--surface-2); border: 1px solid var(--border);
+  font-size: 10px; font-weight: 600;
+}
+.btn-action.recording { background: var(--white); color: var(--black); }
+.btn-danger { color: var(--text); opacity: 0.7; }
+
+.btn-text { font-size: 9px; color: var(--muted); font-weight: 700; }
+.btn-text:hover { color: var(--white); }
+
+/* --- TIMELINE --- */
+.log-list { max-height: 250px; overflow-y: auto; padding: 0; }
+.log-item {
+  display: flex; gap: 16px; padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.log-item:last-child { border-bottom: none; }
+.log-time { color: var(--muted); font-family: monospace; font-size: 11px; flex-shrink: 0; }
+.log-event { flex: 1; color: var(--text); font-size: 12px; font-weight: 600; text-transform: uppercase; }
+.log-event.highlight { color: var(--yellow); }
+.log-empty { padding: 16px; text-align: center; color: var(--muted); font-size: 11px; font-family: monospace; }
+
+/* --- HARDWARE RIBBON --- */
+.hardware-ribbon {
+  display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;
+  padding: 16px 12px;
+  background: var(--black); border-top: 1px solid var(--border);
+  font-size: 9px; font-family: monospace; color: var(--muted);
+  margin-top: auto;
+}
+.hardware-ribbon span { display: inline-flex; gap: 4px; }
+.hw-action { color: var(--white); font-weight: 700; }
+
+.hw-dot.standby { background: var(--muted); }
+

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=0">
+  <meta name="theme-color" content="#050505">
+  <title>QuietPaws</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="/site-config.js"></script>
+</head>
+<body>
+
+<header class="top-bar">
+  <div class="brand-col">
+    <div class="brand">QUIETPAWS</div>
+    <div class="brand-sub">PHONE-FIRST AI</div>
+  </div>
+  <div class="status-col">
+    <div class="hw-title">iQOO 15</div>
+    <div class="status-row">
+      <span class="live-text" id="navStatusText">LIVE</span> <span class="status-dot-pulse" id="navStatusPulse">●</span>
+    </div>
+    <div class="local-text">LOCAL</div>
+  </div>
+</header>
+
+<main class="app-container">
+  <section class="hero-header">
+    <h1>THE PHONE THAT<br>STAYS TO PROTECT<br>YOUR MEETING.</h1>
+    <p>ON-DEVICE INTELLIGENCE FOR WORKSPACE INTERRUPTION PREVENTION.</p>
+    <div class="agent-moment">PHONE SEES → HEARS → ACTS</div>
+  </section>
+
+  <section class="camera-section" id="cameraSection">
+    <div class="camera-header">
+      <div class="hardware-status">
+        <span id="dotCamera" class="hw-dot"></span> CAM
+        <span id="dotMic" class="hw-dot"></span> MIC
+        <span id="dotModel" class="hw-dot"></span> AI
+      </div>
+      <div class="fps" id="fpsCounter">—</div>
+    </div>
+    
+    <div class="video-wrap">
+      <video id="camera" autoplay muted playsinline></video>
+      <canvas id="overlay"></canvas>
+
+      
+      <div class="idle-screen" id="idleScreen">
+        <div class="idle-title">QUIETPAWS</div>
+        <div style="font-size:0.8rem; margin-bottom: 1.5rem; opacity:0.8; letter-spacing:1px; text-transform:uppercase;">Built for iQOO 15</div>
+        <div style="font-size:1.1rem; font-weight:700; line-height:1.2; margin-bottom: 2rem; text-align:center;">
+          THE PHONE THAT<br>STAYS TO PROTECT<br>YOUR MEETING.
+        </div>
+        
+        <div class="idle-reqs" style="margin-bottom: 2rem;">
+          CAMERA<br><span class="req-val">REQUIRED</span><br><br>
+          MICROPHONE<br><span class="req-val" style="color:var(--muted)">OPTIONAL</span><br><br>
+          HAPTICS<br><span id="hapticCheckState" class="req-val" style="color:var(--muted)">CHECKING...</span>
+        </div>
+        
+        <button id="btnStart" class="btn-primary">START QUIETPAWS</button>
+        <a href="https://drive.google.com/uc?export=download&id=17rfE_sBcE2ZXMzh5yWQW0y4FSwHbHxbX" class="btn-primary" style="margin-top: 1rem; text-decoration: none; display: flex; justify-content: center; align-items: center; background: transparent; border: 1px solid var(--white); color: var(--white);">ANDROID TEST</a>
+        <div id="startError" class="start-error"></div>
+      </div>
+    </div>
+    
+    <div class="waveform-container">
+      <div class="waveform-label">MIC <span class="hw-dot on"></span></div>
+      <div class="waveform" id="waveform"></div>
+    </div>
+  </section>
+
+  <section class="dashboard-grid">
+    <div class="dash-card">
+      <div class="dash-label">MEETING MODE</div>
+      <div class="dash-value" id="statusMeeting">● ON</div>
+      <button id="btnMeeting" class="btn-toggle"></button>
+    </div>
+    
+    <div class="dash-card" id="cardDog">
+      <div class="dash-label">DOG STATUS</div>
+      <div class="dash-value" id="statusDog">SEARCHING</div>
+    </div>
+    
+    <div class="dash-card" id="cardIntervention">
+      <div class="dash-label">INTERVENTION</div>
+      <div class="dash-value" id="statusIntervention">STANDBY</div>
+    </div>
+  </section>
+
+  <section class="controls-section">
+    <div class="card voice-card">
+      <div class="card-header">OWNER VOICE</div>
+      <div class="voice-layout">
+        <div class="voice-status">
+          <div class="voice-state" id="voiceState">Not recorded</div>
+          <div class="voice-sub" id="voiceSub">Will use fallback TTS</div>
+        </div>
+        <div class="voice-actions">
+          <button id="btnRecordPrimary" class="btn-action">RECORD</button>
+          <button id="btnPreviewPrimary" class="btn-action" hidden>PLAY</button>
+          <button id="btnDeletePrimary" class="btn-action btn-danger" hidden>DELETE</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card timeline-card">
+      <div class="card-header flex-between">
+        <span>LIVE EVENTS</span>
+        <button id="btnClearLog" class="btn-text">CLEAR</button>
+      </div>
+      <div id="logList" class="log-list">
+        <div class="log-empty">SYSTEM IDLE</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="hardware-ribbon">
+  <span>CAMERA <span class="hw-action">SEE</span></span>
+  <span>MIC <span class="hw-action">HEAR</span></span>
+  <span>AI <span class="hw-action">THINK</span></span>
+  <span>SPEAKER <span class="hw-action">ACT</span></span>
+  <span>HAPTICS <span class="hw-action">INFORM</span></span>
+</footer>
+
+<script type="module" src="/app.js"></script>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').catch(()=>{});
+    });
+  }
+</script>
+</body>
+</html>

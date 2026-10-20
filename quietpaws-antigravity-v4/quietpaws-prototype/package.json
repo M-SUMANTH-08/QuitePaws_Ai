@@ -1,0 +1,25 @@
+{
+  "name": "quietpaws-web-prototype",
+  "version": "4.0.0",
+  "private": true,
+  "description": "QuietPaws \u2014 phone-native, offline-first, meeting-aware pet interruption prevention browser prototype.",
+  "type": "module",
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "node scripts/build.mjs",
+    "start": "npx serve .",
+    "test": "node tests/smoke.mjs"
+  },
+  "keywords": [
+    "quietpaws",
+    "edge-ai",
+    "tensorflow-js",
+    "coco-ssd",
+    "vercel",
+    "offline-first"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

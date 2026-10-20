@@ -1,0 +1,9 @@
+{
+  "name": "QuietPaws",
+  "short_name": "QuietPaws",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0F",
+  "theme_color": "#0A0A0F",
+  "description": "Offline-first, meeting-aware pet interruption prevention prototype."
+}
