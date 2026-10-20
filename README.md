@@ -1,11 +1,11 @@
-# QuietPaws — V4 Antigravity / Vercel Prototype
+# QuietPaws_Ai 
 
 QuietPaws is a phone-native, offline-first, meeting-aware pet interruption prevention prototype.
 
 ## Device positioning
-- **Target hardware:** iQOO 15.
+- **Target hardware:** like iQOO 15.
 - **Development/demo hardware:** POCO X6 Pro.
-- iQOO 15-specific performance claims are intentionally not included until the target device is measured.
+- like iQOO 15-specific performance claims are intentionally not included until the target device is measured.
 
 ## Browser architecture
 `COCO-SSD vision → spectral audio → temporal/workspace fusion → owner voice → response verification → haptic/local log`
